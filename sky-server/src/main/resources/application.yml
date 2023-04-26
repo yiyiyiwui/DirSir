@@ -8,7 +8,8 @@ spring:
       # swagger3.0开始底层Springfox使用的路径匹配是基于AntPathMatcher
       matching-strategy: ant_path_matcher
   profiles:
-    active: dev
+    active: dev    #设置环境
+
   main:
     allow-circular-references: true
   datasource:
@@ -33,3 +34,8 @@ sky:
     admin-secret: itcast
     # 设置jwt过期时间(30分钟)
     admin-ttl: 1800000
+  alioss:
+    endpoint: ${sky.alioss.endpoint}
+    access-key-id: ${sky.alioss.access-key-id}
+    access-key-secret: ${sky.alioss.access-key-secret}
+    bucket-name: ${sky.alioss.bucket-name}
