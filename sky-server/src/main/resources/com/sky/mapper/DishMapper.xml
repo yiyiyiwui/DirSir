@@ -28,6 +28,20 @@
                    #{updateUser}
                )
     </insert>
+    <update id="updateById">
+        update dish
+    <set>
+        <if test="updateUser!=null ">update_user=#{updateUser},</if>
+        <if test="image!=null and image!=''">image=#{image},</if>
+        <if test="categoryId!=null ">category_id=#{categoryId},</if>
+        <if test="name!=null and name!=''">name=#{name},</if>
+        <if test="updateTime!=null ">update_time=#{updateTime},</if>
+        <if test="price!=null ">price=#{price},</if>
+        <if test="status!=null ">status=#{status},</if>
+        <if test="description!=null and description!=''">description=#{description}</if>
+    </set>
+        where id=#{id}
+    </update>
     <!--菜品分页-->
     <select id="getList" resultType="com.sky.vo.DishVO">
         select d.*,c.name category_name from dish d left join category c on d.category_id = c.id

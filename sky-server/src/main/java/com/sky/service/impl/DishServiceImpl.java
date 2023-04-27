@@ -10,9 +10,12 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.entity.Setmeal;
 import com.sky.exception.BusinessException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealDishMapper;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -30,6 +33,7 @@ public class DishServiceImpl implements DishService {
     DishMapper dishMapper;
     @Autowired
     DishFlavorMapper dishFlavorMapper;
+
 
 
     /*菜品新增*/
@@ -96,5 +100,83 @@ public class DishServiceImpl implements DishService {
         dishVO.setFlavors(flavors);
         //4 返回vo
         return dishVO;
+    }
+
+    /*修改菜品*/
+    @Transactional//开启数据库事务
+    @Override
+    public void updateById(DishDTO dishDTO) {
+        //1 修改菜品基本信息
+        //1.1 菜品dto转菜品entity
+        Dish dish = BeanUtil.copyProperties(dishDTO, Dish.class);
+        //1.2 调用mapper修改
+        dishMapper.updateById(dish);
+        //2 根据菜品id删除旧口味列表
+        dishFlavorMapper.deleteByDishId(dish.getId());
+        //3 遍历新口味列表
+        List<DishFlavor> flavorList = dishDTO.getFlavors();
+        if (ArrayUtil.isNotEmpty(flavorList)) {
+            for (DishFlavor dishFlavor : flavorList) {
+            //3.1 关联菜品id
+                dishFlavor.setDishId(dish.getId());
+            //3.2 保存口味
+                dishFlavorMapper.insert(dishFlavor);
+            }
+        }
+
+
+
+    }
+    @Autowired
+    SetmealDishMapper setmealDishMapper;
+
+    /*删除菜品*/
+    @Transactional//添加数据库事务
+    @Override
+    public void deleteBatch(List<Long> ids) {
+        //1 先查询菜品售卖状态
+        for (Long id : ids) {
+            if (dishMapper.getById(id).getStatus().equals(StatusConstant.ENABLE)) {
+                //只要查询到有一个在售卖中，就抛异常
+                throw new BusinessException("有菜品在起售，不能删除");
+            }
+        }
+        //2 查询菜品是否有关联的套餐
+        Integer countSetmeal = setmealDishMapper.countByDishIds(ids);
+        if (countSetmeal>0) {
+            //有一个关联套餐，也不可删除
+            throw new BusinessException("有关联套餐菜品不可删除");
+        }
+        ids.forEach(id->{
+        //3 删除菜品基本信息
+            dishMapper.deleteById(id);
+        //4 删除菜品口味列表
+            dishFlavorMapper.deleteByDishId(id);
+        });
+
+    }
+
+    @Autowired
+    private SetmealMapper setmealMapper;
+
+    /*启用禁用*/
+    @Transactional
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        //1 封装实体
+        Dish dish = Dish.builder().id(id).status(status).build();
+        //2 修改菜品状态
+        dishMapper.updateById(dish);
+        //3 判断是否为禁用
+        if (status.equals(StatusConstant.DISABLE)) {
+            //同时禁用关联的套餐
+            setmealMapper.updateStatusByDishId(id);
+        }
+    }
+
+    /*查询菜品列表*/
+    @Override
+    public List<DishVO> getList(DishPageDTO dishPageDTO) {
+        return dishMapper.getList(dishPageDTO);
     }
 }

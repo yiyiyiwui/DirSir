@@ -4,6 +4,7 @@ import com.sky.annotation.AutoFill;
 import com.sky.dto.DishPageDTO;
 import com.sky.entity.Dish;
 import com.sky.vo.DishVO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -28,4 +29,16 @@ public interface DishMapper {
 
     /*根据id查询*/
     Dish getById(Long id);
+
+    /*修改菜品*/
+    @AutoFill("update")
+    void updateById(Dish dish);
+
+    /*删除菜品*/
+    @Delete("delete from dish where id=#{id}")
+    void deleteById(Long id);
+
+    /*起售停售套餐*/
+    @Select("select count(*) from dish where status=#{status} and id in(select dish_id from setmeal_dish where setmeal_id =#{setmealId}) ")
+    Long countBySidAndStatus(Long setmealId, int status);
 }
