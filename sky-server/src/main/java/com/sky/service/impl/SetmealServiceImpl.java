@@ -34,7 +34,6 @@ public class SetmealServiceImpl implements SetmealService {
     private SetmealDishMapper setmealDishMapper;
 
     /*新增套餐*/
-    @Transactional
     @Override
     public void save(SetmealDTO setmealDTO) {
         // 1 参数校验
@@ -69,8 +68,8 @@ public class SetmealServiceImpl implements SetmealService {
         //1 开启分页
         PageHelper.startPage(setmealPageDTO.getPage(), setmealPageDTO.getPageSize());
         //2 查询list(条件)
-        List<SetmealDTO> volist = setmealMapper.getList(setmealPageDTO);
-        Page<SetmealDTO> page = (Page<SetmealDTO>) volist;
+        List<SetmealVO> volist = setmealMapper.getList(setmealPageDTO);
+        Page<SetmealVO> page = (Page<SetmealVO>) volist;
         //3  返回分页
         return new PageResult(page.getTotal(),page.getResult());
     }
@@ -91,7 +90,6 @@ public class SetmealServiceImpl implements SetmealService {
 
     /*修改套餐*/
     @Override
-    @Transactional
     public void updateById(SetmealDTO setmealDTO) {
         //1 先修改套餐
         Setmeal setmeal = BeanUtil.copyProperties(setmealDTO, Setmeal.class);
@@ -106,7 +104,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     /*批量删除套餐*/
-    @Transactional
+
     @Override
     public void deleteBatch(List<Long> ids) {
         //1 起售中的套餐不能删除
@@ -128,10 +126,9 @@ public class SetmealServiceImpl implements SetmealService {
 
     /*起售停售套餐*/
     @Override
-    @Transactional
     public void startOrStop(Setmeal setmeal) {
         //1 起售套餐：需要查看关联菜品是否都是起售
-        if (setmeal.getStatus()== StatusConstant.ENABLE) {
+        if (setmeal.getStatus().equals(StatusConstant.ENABLE)) {
         //2 查询是否关联有停售状态菜品
             Long count = dishMapper.countBySidAndStatus(setmeal.getId(), 0);
             if (count != null && count > 0) {

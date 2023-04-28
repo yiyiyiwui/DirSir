@@ -4,6 +4,7 @@ import com.sky.annotation.AutoFill;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageDTO;
 import com.sky.entity.Setmeal;
+import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -31,7 +32,7 @@ public interface SetmealMapper {
     SetmealDTO getByName(String name);
 
     /*套餐分页（查询list 条件）*/
-    List<SetmealDTO> getList(SetmealPageDTO setmealPageDTO);
+    List<SetmealVO> getList(SetmealPageDTO setmealPageDTO);
 
     /*根据id查询*/
     @Select("select * from setmeal where id =#{id}")

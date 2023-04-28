@@ -5,9 +5,10 @@ import com.sky.dto.SetmealPageDTO;
 import com.sky.entity.Setmeal;
 import com.sky.result.PageResult;
 import com.sky.vo.SetmealVO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Transactional//事务
 public interface SetmealService {
 
     /*新增套餐*/

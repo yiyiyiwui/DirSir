@@ -37,7 +37,6 @@ public class DishServiceImpl implements DishService {
 
 
     /*菜品新增*/
-    @Transactional//数据库事务
     @Override
     public void saveDishWithFlavor(DishDTO dishDTO) {
         //1 参数校验
@@ -103,7 +102,6 @@ public class DishServiceImpl implements DishService {
     }
 
     /*修改菜品*/
-    @Transactional//开启数据库事务
     @Override
     public void updateById(DishDTO dishDTO) {
         //1 修改菜品基本信息
@@ -131,7 +129,6 @@ public class DishServiceImpl implements DishService {
     SetmealDishMapper setmealDishMapper;
 
     /*删除菜品*/
-    @Transactional//添加数据库事务
     @Override
     public void deleteBatch(List<Long> ids) {
         //1 先查询菜品售卖状态
@@ -160,7 +157,6 @@ public class DishServiceImpl implements DishService {
     private SetmealMapper setmealMapper;
 
     /*启用禁用*/
-    @Transactional
     @Override
     public void startOrStop(Integer status, Long id) {
         //1 封装实体

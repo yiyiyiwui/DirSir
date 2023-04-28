@@ -15,20 +15,21 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/admin/category")
+@RequestMapping("/admin/category")//springmvc的方法，用来给当前地址绑定一个url的网络地址
 public class CategoryController {
     @Autowired
     CategorySerivce categorySerivce;
 
     /*分类分页*/
     @GetMapping("page")
-    public Result getPage(CategoryPageQueryDTO categoryPageQueryDTO) {
+    public Result getPage( CategoryPageQueryDTO categoryPageQueryDTO) {
         PageResult pageResult = categorySerivce.getPage(categoryPageQueryDTO);
         return Result.success(pageResult);
     }
 
     /*新增分类*/
-    @PostMapping
+
+    @PostMapping /*@RequestBody 将方法的返回值转为json，然后响应到客户端*/
     public Result save(@RequestBody CategoryDTO categoryDTO) {
         //调用service新增
         categorySerivce.save(categoryDTO);

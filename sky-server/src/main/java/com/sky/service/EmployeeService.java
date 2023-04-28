@@ -5,8 +5,9 @@ import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.result.PageResult;
+import org.springframework.transaction.annotation.Transactional;
 
-
+@Transactional//事务
 public interface EmployeeService {
     /**员工登录*/
     Employee login(EmployeeLoginDTO employeeLoginDTO);

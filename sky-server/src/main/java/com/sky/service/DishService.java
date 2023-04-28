@@ -4,9 +4,10 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageDTO;
 import com.sky.result.PageResult;
 import com.sky.vo.DishVO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Transactional//事务
 public interface DishService {
     /*菜品新增*/
     void saveDishWithFlavor(DishDTO dishDTO);

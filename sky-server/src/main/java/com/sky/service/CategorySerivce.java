@@ -4,9 +4,10 @@ import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
 import com.sky.result.PageResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Transactional//事务
 public interface CategorySerivce {
     /*分类分页*/
     PageResult getPage(CategoryPageQueryDTO categoryPageQueryDTO);
