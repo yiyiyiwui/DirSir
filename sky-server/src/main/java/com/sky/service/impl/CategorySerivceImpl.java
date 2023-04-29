@@ -70,6 +70,7 @@ public class CategorySerivceImpl implements CategorySerivce {
     private SetmealMapper setmealMapper;
 
 
+
     /*删除分类*/
     @Override
     public void deleteById(Long id) {
@@ -119,5 +120,12 @@ public class CategorySerivceImpl implements CategorySerivce {
                 .updateUser(ThreadLocalUtil.getCurrentId())
                 .build();
         categoryMapper.updateById(category);
+    }
+
+    /*条件查询*/
+    @Override
+    public List<Category> getParamList(CategoryDTO categoryDTO) {
+        return  categoryMapper.getParamList(categoryDTO);
+
     }
 }

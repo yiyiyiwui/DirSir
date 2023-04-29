@@ -26,4 +26,7 @@ public interface CategorySerivce {
 
     /*分类启用禁用*/
     void startOrStop(Integer status, Long id);
+
+    /*条件查询*/
+    List<Category> getParamList(CategoryDTO categoryDTO);
 }

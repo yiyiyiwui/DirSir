@@ -1,6 +1,7 @@
 package com.sky.config;
 
 import com.sky.interceptor.AdminLoginInterceptor;
+import com.sky.interceptor.UserLoginInterceptor;
 import com.sky.json.JacksonObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     AdminLoginInterceptor adminLoginInterceptor;
+    @Autowired
+    UserLoginInterceptor userLoginInterceptor;
 
     //注册拦截器
 
@@ -28,7 +31,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/admin/employee/login",
                         "/admin/employee/logout",
                         "/error"
-                );
+                );//后台有异常的话，springboot会发这个请求
+
+        /*注册小程序登录拦截器*/
+        registry.addInterceptor(userLoginInterceptor)
+                .addPathPatterns("/user/**")
+                .excludePathPatterns("/user/user/login", "/user/shop/status");
     }
 
     /**

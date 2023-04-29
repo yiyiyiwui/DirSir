@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.FlowView;
 import java.util.List;
 
 @Service
@@ -175,4 +176,23 @@ public class DishServiceImpl implements DishService {
     public List<DishVO> getList(DishPageDTO dishPageDTO) {
         return dishMapper.getList(dishPageDTO);
     }
+
+    /*根据id查询菜品列表（小程序）*/
+    @Override
+    public List<DishVO> getParamList(DishPageDTO dishPageDTO) {
+        // 1 查询菜品列表
+        List<DishVO> voList = dishMapper.getList(dishPageDTO);
+        //2 遍历菜品
+        voList.forEach(dishVO -> {
+            //根据菜品id查询口味
+            List<DishFlavor> flavorList = dishFlavorMapper.getListByDishId(dishVO.getId());
+            //把口味封装到vo
+            dishVO.setFlavors(flavorList);
+        });
+        //3 返回
+        return voList;
+    }
+
+
+
 }

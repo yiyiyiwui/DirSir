@@ -1,6 +1,7 @@
 package com.sky.mapper;
 
 import com.sky.annotation.AutoFill;
+import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
 import org.apache.ibatis.annotations.Delete;
@@ -28,4 +29,12 @@ public interface CategoryMapper {
 
     /*更新*/
     void updateById(Category category);
+
+    /*条件查询*/
+    default List<Category> getParamList() {
+        return getParamList();
+    }
+
+    /*条件查询*/
+    List<Category> getParamList(CategoryDTO categoryDTO);
 }

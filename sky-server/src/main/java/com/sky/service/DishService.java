@@ -29,4 +29,7 @@ public interface DishService {
 
     /*查询菜品列表*/
     List<DishVO> getList(DishPageDTO dishPageDTO);
+
+    /*条件查询*/
+    List<DishVO> getParamList(DishPageDTO dishPageDTO);
 }

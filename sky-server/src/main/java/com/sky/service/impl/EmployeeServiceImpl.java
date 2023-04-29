@@ -32,7 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeMapper employeeMapper;
 
 
-    /*员工登陆*/
+    /*员工登录*/
     @Override
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
         //1 参数校验

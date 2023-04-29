@@ -60,7 +60,7 @@ public class SetmealServiceImpl implements SetmealService {
             setmealDishMapper.insert(setmealDish);
             }
         }
-    }
+}
 
     /*套餐分页*/
     @Override
@@ -137,5 +137,11 @@ public class SetmealServiceImpl implements SetmealService {
         }
         //3 修改套餐状态
         setmealMapper.updateById(setmeal);
+    }
+
+    /*根据分类id查询起售的套餐列表*/
+    @Override
+    public List<SetmealVO> getParamList(SetmealPageDTO setmealPageDTO) {
+        return setmealMapper.getList(setmealPageDTO);
     }
 }

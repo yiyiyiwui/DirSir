@@ -35,6 +35,7 @@
         </where>
         order by sort asc
     </select>
+
     <!--根据id修改分类-->
     <update id="updateById">
         update category
@@ -48,4 +49,14 @@
         </set>
         where id =#{id}
     </update>
+    <!--条件查询-->
+    <select id="getParamList" resultType="com.sky.entity.Category">
+        select * from category
+    <where>
+        <if test="name!=null and name!=''">and name like concat('%',#{name},'%')</if>
+        <if test="type!=null">and type = #{type}</if>
+        <if test="status!=null">and status = #{status}</if>
+    </where>
+    order by sort asc
+    </select>
 </mapper>

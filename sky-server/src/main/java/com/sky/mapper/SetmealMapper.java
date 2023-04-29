@@ -32,7 +32,7 @@ public interface SetmealMapper {
     SetmealDTO getByName(String name);
 
     /*套餐分页（查询list 条件）*/
-    List<SetmealVO> getList(SetmealPageDTO setmealPageDTO);
+     List<SetmealVO> getList(SetmealPageDTO setmealPageDTO);
 
     /*根据id查询*/
     @Select("select * from setmeal where id =#{id}")

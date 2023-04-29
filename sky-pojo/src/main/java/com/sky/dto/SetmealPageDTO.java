@@ -1,7 +1,8 @@
 package com.sky.dto;
 
+import lombok.Builder;
 import lombok.Data;
-
+@Builder
 @Data
 public class SetmealPageDTO {
     private Integer page = 1;
@@ -9,4 +10,5 @@ public class SetmealPageDTO {
     private String name; //套餐名称
     private Long categoryId; //分类Id
     private Integer status; //套餐状态
+
 }

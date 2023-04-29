@@ -11,3 +11,8 @@ sky:
     access-key-id: LTAI5tPNvGs3sxafCTJBSHdd
     access-key-secret: 8qYDdqCgqrHlft6FNy9QGzgQNXuBEd
     bucket-name: sky-heima
+  wechat:
+    # 小程序的appid
+    appid: wxa3b22dca17324f84
+    # 小程序的密钥
+    secret: bcb42123b1c3bb02c735420a21be6cfb

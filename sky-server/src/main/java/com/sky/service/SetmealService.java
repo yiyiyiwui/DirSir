@@ -28,4 +28,7 @@ public interface SetmealService {
 
     /*奇搜停售套餐*/
     void startOrStop(Setmeal setmeal);
+
+    /*根据分类id查询起售的套餐列表*/
+    List<SetmealVO> getParamList(SetmealPageDTO setmealPageDTO);
 }
