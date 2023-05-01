@@ -9,6 +9,10 @@ spring:
       matching-strategy: ant_path_matcher
   profiles:
     active: dev    #设置环境
+  redis:
+    host: ${sky.redis.host}
+    port: ${sky.redis.port}
+    password: ${sky.redis.password}
 
   main:
     allow-circular-references: true

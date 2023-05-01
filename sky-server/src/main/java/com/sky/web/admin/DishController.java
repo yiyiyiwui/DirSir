@@ -8,9 +8,11 @@ import com.sky.result.Result;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -18,10 +20,15 @@ public class DishController {
     @Autowired
     private DishService dishService;
 
+    @Autowired
+    RedisTemplate redisTemplate ;
+
     /*菜品新增*/
     @PostMapping
     public Result saveDishWithFlavor(@RequestBody DishDTO dishDTO) {
         dishService.saveDishWithFlavor(dishDTO);
+        // 清理缓存
+        redisTemplate.delete("DISH:"+dishDTO.getCategoryId());
         return Result.success();
     }
 
@@ -43,6 +50,9 @@ public class DishController {
     @PutMapping
     public Result updateById(@RequestBody DishDTO dishDTO) {
         dishService.updateById(dishDTO);
+        // 清理缓存
+        Set dishKey = redisTemplate.keys("DISH*");
+        redisTemplate.delete(dishKey);
         return Result.success();
     }
 
@@ -50,6 +60,9 @@ public class DishController {
     @DeleteMapping
     public Result deleteBatch(@RequestParam List<Long> ids) {
         dishService.deleteBatch(ids);
+        // 清理缓存
+        Set dishKey = redisTemplate.keys("DISH*");
+        redisTemplate.delete(dishKey);
         return Result.success();
     }
 
@@ -57,6 +70,9 @@ public class DishController {
     @PostMapping("/status/{status}")
     public Result startOrstop(@PathVariable("status") Integer status, @RequestParam Long id) {
         dishService.startOrStop(status, id);
+        // 清理缓存
+        Set dishKey = redisTemplate.keys("DISH*");
+        redisTemplate.delete(dishKey);
         return Result.success();
     }
 

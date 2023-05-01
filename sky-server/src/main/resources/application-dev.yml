@@ -6,6 +6,10 @@ sky:
     database: sky_take_out
     username: root
     password: root
+  redis:
+    host: localhost
+    port: 6379
+    password: itheima
   alioss:
     endpoint: oss-cn-beijing.aliyuncs.com
     access-key-id: LTAI5tPNvGs3sxafCTJBSHdd
