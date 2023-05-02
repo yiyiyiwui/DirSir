@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//数据浏览查询
 public class DataOverViewQueryDTO implements Serializable {
 
     private LocalDateTime begin;

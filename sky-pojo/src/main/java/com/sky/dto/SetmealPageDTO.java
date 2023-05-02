@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 @Builder
 @Data
+//套餐页面
 public class SetmealPageDTO {
     private Integer page = 1;
     private Integer pageSize = 5;

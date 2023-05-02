@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+//菜品
 public class DishDTO implements Serializable {
 
     private Long id;

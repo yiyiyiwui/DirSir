@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+// 菜品概述
 public class DishOverViewVO implements Serializable {
     // 已启售数量
     private Integer sold;

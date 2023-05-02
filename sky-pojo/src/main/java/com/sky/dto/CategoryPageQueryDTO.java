@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-@Data
+@Data //分类页面查询
 public class CategoryPageQueryDTO implements Serializable {
 
     //页码

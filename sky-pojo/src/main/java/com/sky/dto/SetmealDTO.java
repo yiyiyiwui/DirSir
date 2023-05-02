@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+//套餐
 public class SetmealDTO implements Serializable {
 
     private Long id;

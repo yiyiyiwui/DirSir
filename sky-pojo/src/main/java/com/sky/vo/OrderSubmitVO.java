@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//订单提交
 public class OrderSubmitVO implements Serializable {
     //订单id
     private Long id;

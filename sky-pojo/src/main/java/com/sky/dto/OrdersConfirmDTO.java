@@ -5,6 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
+//订单确认
 public class OrdersConfirmDTO implements Serializable {
 
     private Long id;

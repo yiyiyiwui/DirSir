@@ -11,6 +11,8 @@ import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.PathEditor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ public class SetmealController {
     private SetmealService setmealService;
 
     /*新增套餐*/
+    @Cacheable(value = "setmealCache",key = "#setmealDTO")//先查询缓存，没有再查数据库同步到缓存
     @PostMapping
     public Result save(@RequestBody SetmealDTO setmealDTO) {
         setmealService.save(setmealDTO);
@@ -46,6 +49,7 @@ public class SetmealController {
     }
 
     /*修改套餐*/
+    @Cacheable(value = "setmealCache",key = "#setmealDTO")//先查询缓存，没有再查数据库同步到缓存
     @PutMapping
     public Result updateById(@RequestBody SetmealDTO setmealDTO) {
         setmealService.updateById(setmealDTO);
@@ -53,6 +57,7 @@ public class SetmealController {
     }
 
     /*套餐批量删除*/
+    @CacheEvict(value = "setmealCache",key = "#ids")//先查询缓存，没有再查数据库同步到缓存
     @DeleteMapping
     public Result deleteBatch(@RequestParam List<Long> ids) {
         setmealService.deleteBatch(ids);
@@ -60,6 +65,7 @@ public class SetmealController {
     }
 
     /*起售停售套餐*/
+    @CacheEvict(value = "setmelCache",key = "#id")
     @PostMapping("/status/{status}")
     public Result startOrStop(@PathVariable("status") Integer status, @RequestParam Long id) {
         Setmeal setmeal = Setmeal.builder().id(id).status(status).build();

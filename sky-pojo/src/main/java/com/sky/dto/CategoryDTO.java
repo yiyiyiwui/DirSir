@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+//种类
 public class CategoryDTO implements Serializable {
 
     //主键

@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//菜品项目
 public class DishItemVO implements Serializable {
 
     //菜品名称

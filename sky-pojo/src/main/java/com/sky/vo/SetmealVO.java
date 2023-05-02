@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//套餐
 public class SetmealVO implements Serializable {
 
     private Long id;

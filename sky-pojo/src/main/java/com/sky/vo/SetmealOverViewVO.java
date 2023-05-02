@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//套餐概述
 public class SetmealOverViewVO implements Serializable {
     // 已启售数量
     private Integer sold;

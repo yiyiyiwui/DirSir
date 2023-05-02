@@ -5,6 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
+//拒绝订单
 public class OrdersRejectionDTO implements Serializable {
 
     private Long id;

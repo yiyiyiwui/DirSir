@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.PasswordConstant;
@@ -17,6 +18,7 @@ import com.sky.mapper.EmployeeMapper;
 import com.sky.properties.JwtProperties;
 import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
+import net.sf.jsqlparser.expression.operators.relational.Matches;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,15 +87,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         //2 业务校验
         //2.1 账号唯一
+        String a = "(?:(?:\\+|00)86)?1[3-9]\\d{9}";
         Employee byUsername = employeeMapper.getBetbyUsername(employeeDTO.getUsername());
         if (byUsername != null) {
             throw new BusinessException("账号已存在");
         }
         //2.2 手机号唯一
         Employee byPhone = employeeMapper.getBetbyUsername(employeeDTO.getPhone());
+        String phone = employeeDTO.getPhone();
         if (byPhone!=null) {
             throw new BusinessException("手机号已存在");
         }
+
+//        String jsonString = JSON.toJSONString(byPhone);
+        if (!phone.matches(a)) {
+            throw new BusinessException("手机号格式有误");
+        }
+
         //2.3 身份证号唯一
         Employee byIdNumber = employeeMapper.getBetbyUsername(employeeDTO.getIdNumber());
         if (byIdNumber!=null) {

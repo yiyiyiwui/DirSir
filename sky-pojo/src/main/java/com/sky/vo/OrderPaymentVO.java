@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//订单付款
 public class OrderPaymentVO implements Serializable {
 
     private String nonceStr; //随机字符串

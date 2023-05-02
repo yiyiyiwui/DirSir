@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//用户登录
 public class UserLoginVO implements Serializable {
 
     private Long id;

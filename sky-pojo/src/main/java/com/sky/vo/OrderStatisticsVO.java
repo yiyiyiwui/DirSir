@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+//次数统计
 public class OrderStatisticsVO implements Serializable {
     //待接单数量
     private Integer toBeConfirmed;

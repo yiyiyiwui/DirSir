@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//营业数据
 public class BusinessDataVO implements Serializable {
 
     private Double turnover;//营业额

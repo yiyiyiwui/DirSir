@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//用户信息
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

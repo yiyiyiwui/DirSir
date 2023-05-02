@@ -4,6 +4,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
+//购物车
 public class ShoppingCartDTO implements Serializable {
 
     private Long dishId;

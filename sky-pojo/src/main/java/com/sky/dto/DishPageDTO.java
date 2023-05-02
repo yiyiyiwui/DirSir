@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+//菜品页面
 public class DishPageDTO {
     private Integer page = 1;
     private Integer pageSize = 5;
