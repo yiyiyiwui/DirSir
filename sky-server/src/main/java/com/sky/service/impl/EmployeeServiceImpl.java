@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -40,24 +41,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         //1 参数校验
         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();
-        if (StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
+        if (StrUtil.isBlank(username)||StrUtil.isBlank(password)) {
             throw new BusinessException("非法参数");
         }
         //2 根据用户名查询数据库
-        Employee employee = employeeMapper.getBetbyUsername(username);
+        Employee employee=  employeeMapper.getBetbyUsername(username);
         //3 业务校验
         //3.1 用户名是否存在
-        if (employee==null) {
-            throw new BusinessException("用户名不存在");
+        if (employee.getName()==null) {
+            throw new BusinessException("账号已存在");
         }
         //3.2 密码是否正确(md5是加密算法）
-        String md5 = SecureUtil.md5(password);//加密算法
-        if (!StrUtil.equals(md5, employee.getPassword())) {
-            throw new BusinessException("密码错误");
+        String md5 = SecureUtil.md5(password);
+        if (!StrUtil.equals(md5,employee.getPassword())) {
+            throw new BusinessException("密码输入错误");
         }
         //3.3 账号是否禁用
-        if (employee.getStatus().equals(StatusConstant.DISABLE)) {
-            throw new BusinessException("此账号被禁用，请连续管理员");
+        if (employee.getStatus().equals(StatusConstant.ENABLE)) {
+            throw new BusinessException("账号被禁用，请联系管理员");
         }
         //4 登录成功 返回employee
         return employee;
@@ -80,14 +81,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void save(EmployeeDTO employeeDTO) {
         //1 参数校验
         if (StrUtil.isBlank(employeeDTO.getUsername()) ||
-        StrUtil.isBlank(employeeDTO.getName()) ||
-        StrUtil.isBlank(employeeDTO.getPhone()) ||
-        StrUtil.isBlank(employeeDTO.getIdNumber())) {
+                StrUtil.isBlank(employeeDTO.getName()) ||
+                StrUtil.isBlank(employeeDTO.getPhone()) ||
+                StrUtil.isBlank(employeeDTO.getIdNumber())
+        ) {
             throw new BusinessException("非法的参数");
+        }
+        // 拿输入的名字和正则表达式对比，如果不符合规则，就提示错误信息
+        if (!employeeDTO.getName().matches("^(?:[\u4e00-\u9fa5·]{2,16})$")) {
+            throw new BusinessException("名字输入有误");
         }
         //2 业务校验
         //2.1 账号唯一
-        String a = "(?:(?:\\+|00)86)?1[3-9]\\d{9}";
         Employee byUsername = employeeMapper.getBetbyUsername(employeeDTO.getUsername());
         if (byUsername != null) {
             throw new BusinessException("账号已存在");
@@ -100,9 +105,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
 //        String jsonString = JSON.toJSONString(byPhone);
-        if (!phone.matches(a)) {
-            throw new BusinessException("手机号格式有误");
-        }
+//        if (!phone.matches(a)) {
+//            throw new BusinessException("手机号格式有误");
+//        }
 
         //2.3 身份证号唯一
         Employee byIdNumber = employeeMapper.getBetbyUsername(employeeDTO.getIdNumber());

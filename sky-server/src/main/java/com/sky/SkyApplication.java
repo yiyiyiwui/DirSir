@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.util.Objects;
+
 @SpringBootApplication
 @EnableCaching //redis 开启基于注解的缓存
 @MapperScan("com.sky.mapper")
@@ -15,5 +17,6 @@ public class SkyApplication {
     public static void main(String[] args) {
         SpringApplication.run(SkyApplication.class, args);
         log.info("server started");//日志
+
     }
 }

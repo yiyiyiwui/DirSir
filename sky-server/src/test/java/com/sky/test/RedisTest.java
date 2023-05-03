@@ -1,6 +1,5 @@
 package com.sky.test;
 
-import com.alibaba.druid.sql.visitor.functions.Lcase;
 import com.sky.entity.Category;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedMap;
 
 @SpringBootTest
 @SuppressWarnings("all")
@@ -142,4 +140,13 @@ public class RedisTest {
         //判断key是否存在
         System.out.println(redisTemplate.hasKey("uzi"));
     }
+
+    @Test
+    public void test7() {
+        String phone = "13145670676";
+        boolean matches = phone.matches("^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$");
+        System.out.println(matches);
+    }
+
+
 }

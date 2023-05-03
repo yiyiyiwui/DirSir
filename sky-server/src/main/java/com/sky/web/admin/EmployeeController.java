@@ -34,22 +34,14 @@ public class EmployeeController {
     private JwtProperties jwtProperties;
 
     //员工登录
-    @PostMapping("/login")
+    @PostMapping("login")
     public Result login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
-        //调用service登录
         Employee employee = employeeService.login(employeeLoginDTO);
-        //jwt制作令牌~
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("empId", employee.getId());
-        /*下面方法第一个参数是JWT的加密密匙，第二个参数是JWT的过期时间，第三个参数是把信息放在集合中*/
-        String token = JwtUtil.createJWT(jwtProperties.getAdminSecret(), jwtProperties.getAdminTtl(), claims);
-        //返回vo
-        EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
-                .id(employee.getId())
-                .name(employee.getName())
-                .token(token)
-                .userName(employee.getUsername()).build();
-        return Result.success(employeeLoginVO);
+        String token = JwtUtil.createJWT(jwtProperties.getUserSecret(), jwtProperties.getUserTtl(), claims);
+        EmployeeLoginVO build = EmployeeLoginVO.builder().id(employee.getId()).name(employee.getName()).token(token).userName(employee.getUsername()).build();
+        return Result.success(build);
     }
 
     /*员工退出*/
@@ -57,6 +49,7 @@ public class EmployeeController {
     public Result logout() {
         return Result.success();
     }
+
 
     /*员工分页*/
     @GetMapping("/page")
