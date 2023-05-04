@@ -57,7 +57,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new BusinessException("密码输入错误");
         }
         //3.3 账号是否禁用
-        if (employee.getStatus().equals(StatusConstant.ENABLE)) {
+        if (employee.getStatus().equals(StatusConstant.DISABLE)) {
             throw new BusinessException("账号被禁用，请联系管理员");
         }
         //4 登录成功 返回employee
@@ -91,6 +91,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!employeeDTO.getName().matches("^(?:[\u4e00-\u9fa5·]{2,16})$")) {
             throw new BusinessException("名字输入有误");
         }
+
         //2 业务校验
         //2.1 账号唯一
         Employee byUsername = employeeMapper.getBetbyUsername(employeeDTO.getUsername());
@@ -98,7 +99,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new BusinessException("账号已存在");
         }
         //2.2 手机号唯一
-        Employee byPhone = employeeMapper.getBetbyUsername(employeeDTO.getPhone());
+        Employee byPhone = employeeMapper.getByPhone(employeeDTO.getPhone());
         String phone = employeeDTO.getPhone();
         if (byPhone!=null) {
             throw new BusinessException("手机号已存在");
@@ -108,13 +109,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        if (!phone.matches(a)) {
 //            throw new BusinessException("手机号格式有误");
 //        }
-
         //2.3 身份证号唯一
-        Employee byIdNumber = employeeMapper.getBetbyUsername(employeeDTO.getIdNumber());
+        Employee byIdNumber = employeeMapper.getIdNumber(employeeDTO.getIdNumber());
         if (byIdNumber!=null) {
             throw new BusinessException("身份证号已存在");
         }
         //3 dto转成entity
+        //这个是一个工具类，将一个对象中的属性赋值到另一个对象 BeanUtil.copyProperties 前面的是源，后面的是目标
         Employee employee = BeanUtil.copyProperties(employeeDTO, Employee.class);
         //3.1 补全信息
         String md5 = SecureUtil.md5(PasswordConstant.DEFAULT_PASSWORD);
@@ -122,8 +123,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setStatus(StatusConstant.ENABLE);
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
-        employee.setCreateUser(ThreadLocalUtil.getCurrentId());
-        employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
+        employee.setCreateUser(ThreadLocalUtil.getCurrentId());//创建人，从令牌获取
+        employee.setUpdateUser(ThreadLocalUtil.getCurrentId());//更新人
         //4 调用mapper保存到数据库
         employeeMapper.insert(employee);
     }

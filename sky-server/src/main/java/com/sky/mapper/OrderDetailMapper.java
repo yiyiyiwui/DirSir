@@ -15,4 +15,7 @@ public interface OrderDetailMapper {
     /*根据订单id查询明细列表*/
     @Select("select * from order_detail where order_id=#{orderId}")
     List<OrderDetail> getByOrderId(Long id);
+
+    /*订单数量统计*/
+    Integer findOrderStatistics(Integer confirmed);
 }

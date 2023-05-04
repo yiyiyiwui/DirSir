@@ -23,4 +23,8 @@
                     #{amount}
                 )
     </insert>
+    <!--订单数量统计-->
+    <select id="findOrderStatistics" resultType="java.lang.Integer">
+        select count(id) from orders where status=#{status}
+    </select>
 </mapper>

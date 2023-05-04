@@ -1,6 +1,13 @@
 server:
   port: 8080
 
+##百度地图 AK
+#baidu:
+#  ak: MKUZPizsG7ffVpKrBm0Oxzks86zaPstt
+#  url: http://api.map.baidu.com/geocoding/v3/?output=json&location=showLocation
+#  rurl: http://api.map.baidu.com/reverse_geocoding/v3/?output=json&coordtype=BD09&pois=1
+
+
 spring:
   mvc:
     pathmatch:
@@ -54,3 +61,8 @@ sky:
   wechat:
     appid: ${sky.wechat.appid}
     secret: ${sky.wechat.secret}
+
+  shop:
+    address: 北京市海淀区上地十街10号
+  baidu:
+    ak: tx0IMSt2k3cCeNFBnkPa3L3Ofa4u6h2I
