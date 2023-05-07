@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -39,34 +38,35 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
         //1 参数校验
-        String username = employeeLoginDTO.getUsername();
-        String password = employeeLoginDTO.getPassword();
-        if (StrUtil.isBlank(username)||StrUtil.isBlank(password)) {
-            throw new BusinessException("非法参数");
-        }
+//        String username = employeeLoginDTO.getUsername();
+//        String password = employeeLoginDTO.getPassword();
+//        if (StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
+//            throw new BusinessException("非法参数");
+//        }
         //2 根据用户名查询数据库
-        Employee employee=  employeeMapper.getBetbyUsername(username);
+        Employee employee = employeeMapper.getBetbyUsername(employeeLoginDTO.getUsername());
         //3 业务校验
         //3.1 用户名是否存在
-        if (employee.getName()==null) {
-            throw new BusinessException("账号已存在");
+        if (employee==null) {
+            throw new BusinessException("用户名不存在");
         }
         //3.2 密码是否正确(md5是加密算法）
-        String md5 = SecureUtil.md5(password);
-        if (!StrUtil.equals(md5,employee.getPassword())) {
-            throw new BusinessException("密码输入错误");
+        String md5 = SecureUtil.md5(employeeLoginDTO.getPassword());//加密算法
+        if (!StrUtil.equals(md5, employee.getPassword())) {//加密后和数据库加密后的算法对比
+            throw new BusinessException("密码错误");
         }
         //3.3 账号是否禁用
         if (employee.getStatus().equals(StatusConstant.DISABLE)) {
-            throw new BusinessException("账号被禁用，请联系管理员");
+            throw new BusinessException("此账号被禁用，请连续管理员");
         }
         //4 登录成功 返回employee
         return employee;
     }
 
+
     /*员工分页*/
     @Override
-    public PageResult getpage(EmployeePageQueryDTO employeePageQueryDTO) {
+    public PageResult page(EmployeePageQueryDTO employeePageQueryDTO) {
        // 1 开启分页
         PageHelper.startPage(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
         //2 查询list
@@ -81,19 +81,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void save(EmployeeDTO employeeDTO) {
         //1 参数校验
         if (StrUtil.isBlank(employeeDTO.getUsername()) ||
-                StrUtil.isBlank(employeeDTO.getName()) ||
-                StrUtil.isBlank(employeeDTO.getPhone()) ||
-                StrUtil.isBlank(employeeDTO.getIdNumber())
-        ) {
+        StrUtil.isBlank(employeeDTO.getName()) ||
+        StrUtil.isBlank(employeeDTO.getPhone()) ||
+        StrUtil.isBlank(employeeDTO.getIdNumber())) {
             throw new BusinessException("非法的参数");
         }
-        // 拿输入的名字和正则表达式对比，如果不符合规则，就提示错误信息
-        if (!employeeDTO.getName().matches("^(?:[\u4e00-\u9fa5·]{2,16})$")) {
-            throw new BusinessException("名字输入有误");
-        }
-
         //2 业务校验
         //2.1 账号唯一
+        String a = "(?:(?:\\+|00)86)?1[3-9]\\d{9}";
         Employee byUsername = employeeMapper.getBetbyUsername(employeeDTO.getUsername());
         if (byUsername != null) {
             throw new BusinessException("账号已存在");
@@ -105,17 +100,17 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new BusinessException("手机号已存在");
         }
 
-//        String jsonString = JSON.toJSONString(byPhone);
+        //       String jsonString = JSON.toJSONString(byPhone);
 //        if (!phone.matches(a)) {
 //            throw new BusinessException("手机号格式有误");
 //        }
+
         //2.3 身份证号唯一
         Employee byIdNumber = employeeMapper.getIdNumber(employeeDTO.getIdNumber());
         if (byIdNumber!=null) {
-            throw new BusinessException("身份证号已存在");
+            throw new BusinessException("身份证号输入有误");
         }
         //3 dto转成entity
-        //这个是一个工具类，将一个对象中的属性赋值到另一个对象 BeanUtil.copyProperties 前面的是源，后面的是目标
         Employee employee = BeanUtil.copyProperties(employeeDTO, Employee.class);
         //3.1 补全信息
         String md5 = SecureUtil.md5(PasswordConstant.DEFAULT_PASSWORD);
@@ -123,11 +118,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setStatus(StatusConstant.ENABLE);
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
-        employee.setCreateUser(ThreadLocalUtil.getCurrentId());//创建人，从令牌获取
-        employee.setUpdateUser(ThreadLocalUtil.getCurrentId());//更新人
+        employee.setCreateUser(ThreadLocalUtil.getCurrentId());
+        employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
         //4 调用mapper保存到数据库
         employeeMapper.insert(employee);
     }
+
     /*回显员工*/
     @Override
     public Employee getById(Long id) {

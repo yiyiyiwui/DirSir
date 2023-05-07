@@ -28,7 +28,6 @@ public class CategoryController {
     }
 
     /*新增分类*/
-
     @PostMapping /*@RequestBody 将方法的返回值转为json，然后响应到客户端*/
     public Result save(@RequestBody CategoryDTO categoryDTO) {
         //调用service新增

@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.WebSocket.WebSocketServer;
 import com.sky.context.ThreadLocalUtil;
 import com.sky.dto.*;
 import com.sky.entity.AddressBook;
@@ -19,12 +20,14 @@ import com.sky.mapper.*;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.service.ShoppingCartService;
+import com.sky.task.WebSocketTask;
 import com.sky.utils.HttpClientUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 import lombok.RequiredArgsConstructor;
+import nonapi.io.github.classgraph.json.Id;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +57,8 @@ public class OrderServiceImpl implements OrderService {
     private final AddressBookMapper addressBookMapper;
 
     private final ShoppingCartMapper shoppingCartMapper;
+
+    private final WebSocketServer webSocketServer;
 
     // 提交订单
     @Override
@@ -123,15 +128,24 @@ public class OrderServiceImpl implements OrderService {
                 .build();
         orderMapper.update(orders);
 
+        //------------webSocket 发送消息可客户端 ------------------
+        Map map = new HashMap();
+        map.put("type", 1); //消息类型 1 表示来单提醒
+        map.put("orderId", orders.getId());
+        map.put("content", "订单号" + ordersPaymentDTO.getOrderNumber());
+        // 通过websocket实现来单提醒，向客户段浏览器推送消息
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
+
         // 2. 返回一个空结果
-        OrderPaymentVO vo = OrderPaymentVO.builder()
-                .nonceStr("52640818796650160489223277005653")
-                .paySign("iHYG8l90s5nIXMWgkmN6PX2+3e4mW4spWMOLnvdQZTePZiMy/CDiP3CfvsByp65PpnVcmG1Br1EY7f46xeToKOlmK2qe00IFBaXUtNH/6+k5Ij7fXRKNRQxQuODegkWSvX+fw2FKo8qKT1clJd5/T/Hkwu6cSDZGqHIaW3eqha14HRpsT5siHlwoHw04X5wVvnktAx4Koko/tsMtI/t/dkCDvIbCve1ut7/FVVtlgNJKMR6rzY0wiyroseSy3qjbw6BUL+HPnxlLqF2PNbk9jkimyxJrwzxk2NFxjHM87tybMBMTITCuIuH9hZCFFbJTFsG9BYsL2H7GcsaYmzIoig==")
-                .timeStamp("1683009626")
-                .signType("RSA")
-                .packageStr("prepay_id=wx02144025953621ab23eaa2fc334f2a0000")
-                .build();
-        return vo;
+//        OrderPaymentVO vo = OrderPaymentVO.builder()
+//                .nonceStr("52640818796650160489223277005653")
+//                .paySign("iHYG8l90s5nIXMWgkmN6PX2+3e4mW4spWMOLnvdQZTePZiMy/CDiP3CfvsByp65PpnVcmG1Br1EY7f46xeToKOlmK2qe00IFBaXUtNH/6+k5Ij7fXRKNRQxQuODegkWSvX+fw2FKo8qKT1clJd5/T/Hkwu6cSDZGqHIaW3eqha14HRpsT5siHlwoHw04X5wVvnktAx4Koko/tsMtI/t/dkCDvIbCve1ut7/FVVtlgNJKMR6rzY0wiyroseSy3qjbw6BUL+HPnxlLqF2PNbk9jkimyxJrwzxk2NFxjHM87tybMBMTITCuIuH9hZCFFbJTFsG9BYsL2H7GcsaYmzIoig==")
+//                .timeStamp("1683009626")
+//                .signType("RSA")
+//                .packageStr("prepay_id=wx02144025953621ab23eaa2fc334f2a0000")
+//                .build();
+
+        return new OrderPaymentVO();
     }
 
     /*历史订单*/
@@ -209,8 +223,18 @@ public class OrderServiceImpl implements OrderService {
     /*催单*/
     @Override
     public void reminder(Long id) {
+        //1 查询订单是否存在
+        Orders byId = orderMapper.getById(id);
+        if (byId==null) {
+            throw new BusinessException("订单不存在");
+        }
+        //基于websocket实现催单
+        Map map = new HashMap<>();
+        map.put("type", 2);//代表用户催单
+        map.put("orderId",id);
+        map.put("content", "订单号：" + byId.getNumber());
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
-
 
 
     /*订单搜索*/

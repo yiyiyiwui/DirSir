@@ -1,5 +1,6 @@
 package com.sky.web.admin;
 
+
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
@@ -62,25 +63,25 @@ public class EmployeeController {
 
     /*员工分页*/
     @GetMapping("/page")
-    public Result getpage(EmployeePageQueryDTO employeePageQueryDTO) {
-        //调用service
-        PageResult pageResult = employeeService.getpage(employeePageQueryDTO);
-        //返回分页结果
+    public Result page(EmployeePageQueryDTO employeePageQueryDTO) {
+        PageResult pageResult=employeeService.page(employeePageQueryDTO);
         return Result.success(pageResult);
     }
 
+
     /*新增员工*/
-    @PostMapping //上面定义了一样的，所以这里可以省略不写
+    @PostMapping
     public Result save(@RequestBody EmployeeDTO employeeDTO) {
-        //调用service
         employeeService.save(employeeDTO);
-        //返回success
         return Result.success();
     }
+
+
 
     /*回显员工*/
     @GetMapping("/{id}")
     public Result getByid(@PathVariable("id") Long id) {
+
         //调用service
         Employee employee = employeeService.getById(id);
         //返回

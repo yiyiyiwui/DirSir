@@ -4,6 +4,8 @@ import com.sky.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Map;
+
 @Mapper
 public interface UserMapper {
     /*根据openid查询*/
@@ -12,6 +14,5 @@ public interface UserMapper {
 
     /*注册*/
     void insert(User user);
-
 
 }
