@@ -86,6 +86,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         StrUtil.isBlank(employeeDTO.getIdNumber())) {
             throw new BusinessException("非法的参数");
         }
+//        if (!employeeDTO.getName().matches("^(?:[\u4e00-\u9fa5·]{2,16})$")) {
+//            throw new BusinessException("姓名输入有误");
+//        }
+
         //2 业务校验
         //2.1 账号唯一
         String a = "(?:(?:\\+|00)86)?1[3-9]\\d{9}";

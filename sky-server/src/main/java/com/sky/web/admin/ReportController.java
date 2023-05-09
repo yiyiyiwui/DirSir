@@ -24,7 +24,6 @@ public class ReportController {
                                         @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         //调用service查询
         return Result.success(reportService.getTurnoverStatistics(begin, end));
-
     }
 
     /*用户数据统计*/

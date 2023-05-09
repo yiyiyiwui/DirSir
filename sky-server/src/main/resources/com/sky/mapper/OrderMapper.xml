@@ -116,19 +116,27 @@
             </if>
         </where>
     </select>
-    <!--销量排名-->
-    <select id="getSalesTop10" resultType="com.sky.dto.GoodsSalesDTO">
-        select od.name name,sum(od.number) number from order_detail od ,orders o
-        where od.order_id = o.id
-        and o.status = 5
-        <if test="begin != null">
-            and order_time &gt;= #{begin}
-        </if>
-        <if test="end != null">
-            and order_time &lt;= #{end}
-        </if>
-        group by name
-        order by number desc
-        limit 0, 10
+    <select id="countOrder" resultType="java.lang.Integer">
+        select count(*) from orders
+        <where>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+            <if test="currentDate!=null">
+                and date(order_time) = #{currentDate}
+            </if>
+        </where>
     </select>
+    <!--查询时间区间内的销量排名-->
+    <select id="getSalesTop10" resultType="com.sky.dto.GoodsSalesDTO">
+        select od.name, sum(od.number) number
+        from orders o
+                 join order_detail od on o.id = od.order_id
+        where date(order_time) between #{begin} and #{end}
+          and status = 5
+        group by od.name
+        order by number desc
+            limit 10
+    </select>
+
 </mapper>
