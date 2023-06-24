@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @ServerEndpoint("/ws/{cid}")
 public class WebSocketServer {
-    //ok
+    //zhngsan
 
     //存放会话对象
     private static Map<String, Session> sessionMap = new ConcurrentHashMap();
